@@ -99,6 +99,18 @@ This closest edge cannot have a bounded face incident on it - meaning it's not a
 <p>We pop the feature pair with the minimum error measure. If the feature is a vertex, we move both the vertices to the mid point of the line joining those two. If the feature is an edge, we introduce a new vertex on the orthogonal projection of the vertex on the edge and split the face incident on that edge. We update the vertex, edge, and face records accordingly for both cases. </p>
 
 <p>As and when we update the DCEL, we update the native structure too. This is important to keep all data consistent, that is there must be a synchronization between the two structures. </p>
+
+<h3>
+<a id="week-4" class="anchor" href="#week-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Week 4</h3>
+
+<p>One main concern was the determining of the closest edge for a vertex v. Checking whether a line intersects a face geometrically might not yield accurate results. So I came up with an approach.</p>
+
+<p>While considering an edge for the position of the closest edge, if it is still eligible (after checking for the unbounded face incidence and non-incidence on the vertex), we check if the edge's incident face contains the vertex v. If not check check for the same with the edge's twin. If either of the conditions fail, make this edge ineligible and move on to the next edge. If not, check if the line joining the vertex v to the edge intersects any of the other two edges in the triangle. If true, take the face incident on the twin of the intersected edge and check if the vertex is contained. 
+If the line does not intersect the other two edges, it is an eligible edge, so we continue to calculating the orthogonal distance. Here what we essentially do is make use of the DCEL structure to traverse the faces intersected by the line from the vertex v to the edge being considered. </p>
+
+<p>Setting the unbounded face id to the number of faces gave rise to problems while adding and deleting faces, so it was set to zero and all the functions were updated accordingly. </p>
+
+<p>I will be testing my code with the 'heal' command.</p>
       </section>
     </div>
 
