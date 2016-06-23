@@ -82,7 +82,7 @@ For BRL-CAD, this will be an mged command with TCL binding. For OpenSCAD, an imp
 
 <p>I started with the first algorithm in my proposal, namely the zippering gaps algorithm. This algorithm is meant for gaps within a certain tolerance. This will be decided appropriately. For those greater than that there is the stitching algorithm. </p>
 
-<p>How this algorithm works is we first identify a boundary (free-edges) chain in the mesh and make sure it's not a cycle. If it is, then it's either the boundary of the overall mesh or is a hole. Either way, we don't want it. So, given a start and an end half-edge we implement the zipper gaps algorithm.</p>
+<p>How this algorithm works is we first identify a boundary (free-edges) chain. We obtain free edge chains from the mesh until there's just one left, in which case it's the boundary of the mesh. So, given a start and an end half-edge we implement the zipper gaps algorithm.</p>
 
 <p>We look for a feature pair for each vertex on the boundary chain, and calculate the error measure. We maintain a priority queue that will pop the feature pair with the least error measure. The feature for a vertex can either be a vertex or an edge. This depends on the closest edge. The distance from a vertex to a closest edge will be the perpendicular distance if an orthogonal projection is possible, else it'll be the shortest between the vertex and the closer endpoint. This way we either set the feature_edge or the feature_vertex, but not both, for a vertex. 
 This closest edge cannot have a bounded face incident on it - meaning it's not a free-edge. It cannot be incident on the current vertex being considered. Also, the line joining the vertex to the closest edge (be it the orthogonal projection or the closer end point) cannot cross any face other than the unbounded face - meaning it should be a valid diagonal. </p>
@@ -105,8 +105,7 @@ This closest edge cannot have a bounded face incident on it - meaning it's not a
 
 <p>One main concern was the determining of the closest edge for a vertex v. Checking whether a line intersects a face geometrically might not yield accurate results. So I came up with an approach.</p>
 
-<p>While considering an edge for the position of the closest edge, if it is still eligible (after checking for the unbounded face incidence and non-incidence on the vertex), we check if the edge's incident face contains the vertex v. If not check check for the same with the edge's twin. If either of the conditions fail, make this edge ineligible and move on to the next edge. If not, check if the line joining the vertex v to the edge intersects any of the other two edges in the triangle. If true, take the face incident on the twin of the intersected edge and check if the vertex is contained. 
-If the line does not intersect the other two edges, it is an eligible edge, so we continue to calculating the orthogonal distance. Here what we essentially do is make use of the DCEL structure to traverse the faces intersected by the line from the vertex v to the edge being considered. </p>
+<p>While considering an edge for the position of the closest edge, if it is still eligible (after checking for the unbounded face incidence and non-incidence on the vertex), we check if the edge's incident face contains the vertex v. If not check check for the same with the edge's twin. If either of the conditions fail, make this edge ineligible and move on to the next edge. If the 2-D projection of the line joining the vertex v to the edge intersects any face, it has to intersect another edge of the face as well. Otherwise it would mean that the vertex is inside the face, which is not possible. Thus, now we check if the 2-D projection of the line joining the vertex v to the edge intersects any of the other two edges in the triangle. If yes, then make it ineligible and move to the next edge. If the line joining the vertex doesn't intersect either of the other two edges, it is an eligible edge. So, calculate the shortest distance and update as necessary. </p>
 
 <p>Setting the unbounded face id to the number of faces gave rise to problems while adding and deleting faces, so it was set to zero and all the functions were updated accordingly. </p>
 
@@ -115,7 +114,8 @@ If the line does not intersect the other two edges, it is an eligible edge, so w
 <h3>
 <a id="week-5" class="anchor" href="#week-5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Week 5</h3>
 
-<p>I will be testing the zippering gaps module this week. So, i first create a function - analyse_heal_bot() that will link the TCL command function ged_heal() to the zippering gaps code. This function looks for free edge chains in the mesh that are not cycles (hole/boundary of the mesh) and passes them on for zippering.</p>
+<p>I will be testing the zippering gaps module this week. So, i first create a function - analyse_heal_bot() that will link the TCL command function ged_heal() to the zippering gaps code. This function looks for free edge chains in the mesh that are not the boundary of the mesh and passes them on for zippering.
+I have linked the C and C++ code by publishing the prototype of the function "analyse_heal_bot()", where i call the healing functionalities, in "analyze.h". I'm testing with sample defective meshes.</p>
       </section>
     </div>
 
