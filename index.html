@@ -121,6 +121,15 @@ This closest edge cannot have a bounded face incident on it - meaning it's not a
 <p>The logic of finding the closest edge function was modified to handle vertices and edges separately. The external boundary was excluded from being passed to the zippering gaps function as it is of no use. It was detected using the orientation checker in the Geometry.h header. The external boundary is oriented clockwise, while the inner defects are all oriented counter-clockwise. This way we identify a boundary edge for the given mesh. And check if a candidate edge (as a part of a free-edge chain) is part of the boundary and ignore, if it is. </p>
 
 <p>Numerous memory corruption errors popped up, mainly due to not deleting allocated space. They were resolved.</p>
+
+<h3>
+<a id="week-6" class="anchor" href="#week-6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Week 6</h3>
+
+<p>I continued testing this week. Quite a few modifications had to be made to the vertex contraction and edge contraction procedures. </p>
+
+<p>Checking and setting twins for edges that have been modified. This function takes in a vertex and gets the two edges containing this vertex, with the unbounded face incident on them. For both edges, it is checked whether the edge and its other neighbour need to be squeezed out from the boundary chain. So essentially we delete either 0/2/4 edges. By squeezing out, what is meant is removing the edge from the boundary chain and setting the references of the affected edges properly. This function was called from the previous function, after checking whether that would be needed. </p>
+
+<p>While deleting any record (vertex/edge/face), the references of the other affected records needs to be set right. And the IDs of the vertex list and face list need to be updated too. </p>
       </section>
     </div>
 
