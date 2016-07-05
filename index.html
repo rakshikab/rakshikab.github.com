@@ -130,6 +130,19 @@ This closest edge cannot have a bounded face incident on it - meaning it's not a
 <p>Checking and setting twins for edges that have been modified. This function takes in a vertex and gets the two edges containing this vertex, with the unbounded face incident on them. For both edges, it is checked whether the edge and its other neighbour need to be squeezed out from the boundary chain. So essentially we delete either 0/2/4 edges. By squeezing out, what is meant is removing the edge from the boundary chain and setting the references of the affected edges properly. This function was called from the previous function, after checking whether that would be needed. </p>
 
 <p>While deleting any record (vertex/edge/face), the references of the other affected records needs to be set right. And the IDs of the vertex list and face list need to be updated too. </p>
+
+<h3>
+<a id="week-7" class="anchor" href="#week-7" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Week 7</h3>
+
+<p>Quite a few memory corruption errors came up again. So, the function prototypes of the functions using 'new' to allocate memory, was changed, to accommodate the pointer which was being returned initially. </p>
+
+<p>With the previous definition, the de-allocation of the memory is the responsibility of the caller, in the hidden sense. What this means is that, the memory returned by the function will have to be de-allocated by the caller, but might be easily missed. Thus with the changed prototype, the caller allocates and de-allocates memory without having to check the function for any liabilities. A few functions requires this change. This got rid of most of the memory issues. One that persists is an error that comes with the push operation of the priority queue. That is yet to be fixed.</p>
+
+<p>Meanwhile, work for the stitching algorithm has been started. This algorithm takes in two chains of edges and stitches them together. One main thing to be realized was that the two chains move in opposite directions by virtue of being part of the same loop. Thus it has been taken that the chain A will be moving towards the 'next' edge and the chain B towards the 'previous' edge. </p>
+
+<p>The stitching algorithm's advancing rule is that whichever triangle (made by two vertices of one chain and one of the other) has the least perimeter will be added, and the edge pointer advanced on that chain (next on chain A and previous on chain B). </p>
+
+<p>While adding a triangle, four new half-edges will be added. Suppose that two vertices from chain A and one from chain B form the triangle. There will be two half edges each from the two vertices of chain A to the vertex of chain B and their twins. The incident face reference of the edge (with unbounded face) will be set to the face that will be newly added. </p>
       </section>
     </div>
 
