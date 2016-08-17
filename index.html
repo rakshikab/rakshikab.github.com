@@ -143,6 +143,17 @@ This closest edge cannot have a bounded face incident on it - meaning it's not a
 <p>The stitching algorithm's advancing rule is that whichever triangle (made by two vertices of one chain and one of the other) has the least perimeter will be added, and the edge pointer advanced on that chain (next on chain A and previous on chain B). </p>
 
 <p>While adding a triangle, four new half-edges will be added. Suppose that two vertices from chain A and one from chain B form the triangle. There will be two half edges each from the two vertices of chain A to the vertex of chain B and their twins. The incident face reference of the edge (with unbounded face) will be set to the face that will be newly added. </p>
+
+<h3>
+<a id="week-8" class="anchor" href="#week-8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Week 8</h3>
+
+<p>I tested the zippering code and identified issues with it, the vertex contraction specifically. The mistake was with the degenerate cases of thin triangles with respect to the orientation. When the triangle is made up of collinear lines, the notion of orientation becomes ambiguous. But since the triangle has a particular orientation to start with, that needs to be maintained throughout the procedure. To cope with this problem, the initialization functions were removed from the deleteEdge routine and the actions were slightly tweaked to keep the orientation consistent. </p>
+
+<p>The memory issues were resolved using a debugging tool called Valgrind, suggested by my mentor Daniel. </p>
+
+<p>Another issue that popped up. The validity of the triangles introduced with vertex and edge contraction was not being checked. This introduced complications and the healing did not happen completely. So, this action of checking if a triangle was valid was being performed. It was done by checking if the orientation of the triangle was getting inverted. This prevented any "illegal" contractions from happening. </p>
+
+<p>After the issues were resolved, the changes didn't seem to reflect on the bot. Later, that was taken care of. The function to check for orientation change was added. </p>
       </section>
     </div>
 
