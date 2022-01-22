@@ -1,0 +1,6 @@
+---
+layout: page
+title: Week 2
+---
+
+This week, I mainly worked on the conversion files for both the organizations. The abstract class defined all the functions that will be required for the conversion to the DCEL. Taking into consideration the order in which the data conversion should take place, I.e. the setting of the attributes of the DCEL such that all dependencies could be handled, the functions were written. Some functions were independent of the native mesh structures - those like setting the incident edge for a vertex. These depended only on the attributes of the DCEL that were already set. So these functions were implemented common to both. The other specific functions were defined and declared in the two derived classes.Next step was the UI for the mesh healing. This heal command could have options that indicate healing of only a certain type of defect - say gaps and T-joints. This will be taken care of later on.For BRL-CAD, this will be an mged command with TCL binding. For OpenSCAD, an import command with an attribute indicating that the mesh needs to be fixed (again separate options for separate defects can be accommodated) can be used. These commands will invoke the conversion process and then the mesh healing functions. 
