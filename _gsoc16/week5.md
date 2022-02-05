@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Week 5
+week: 5
 ---
 
 I will be testing the zippering gaps module this week. So, i first create a function - analyse_heal_bot() that will link the TCL command function ged_heal() to the zippering gaps code. This function looks for free edge chains and passes to the zippering gaps function to heal the defects wherever applicable (within the tolerance for zippering). For the defects that are left out, there's stitching and hole filling.Error while linking C++ code with C code took some time to fix. But issue was resolved in the end. The logic of finding the closest edge function was modified to handle vertices and edges separately. The external boundary was excluded from being passed to the zippering gaps function as it is of no use. It was detected using the orientation checker in the Geometry.h header. The external boundary is oriented clockwise, while the inner defects are all oriented counter-clockwise. This way we identify a boundary edge for the given mesh. And check if a candidate edge (as a part of a free-edge chain) is part of the boundary and ignore, if it is. Numerous memory corruption errors popped up, mainly due to not deleting allocated space. They were resolved.

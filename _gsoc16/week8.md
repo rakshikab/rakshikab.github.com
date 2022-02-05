@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Week 8
+week: 8
 ---
 
 I tested the zippering code and identified issues with it, the vertex contraction specifically. The mistake was with the degenerate cases of thin triangles with respect to the orientation. When the triangle is made up of collinear lines, the notion of orientation becomes ambiguous. But since the triangle has a particular orientation to start with, that needs to be maintained throughout the procedure. To cope with this problem, the initialization functions were removed from the deleteEdge routine and the actions were slightly tweaked to keep the orientation consistent. The memory issues were resolved using a debugging tool called Valgrind, suggested by my mentor Daniel. Another issue that popped up. The validity of the triangles introduced with vertex and edge contraction was not being checked. This introduced complications and the healing did not happen completely. So, this action of checking if a triangle was valid was being performed. It was done by checking if the orientation of the triangle was getting inverted. This prevented any \"illegal\" contractions from happening. After the issues were resolved, the changes didn't seem to reflect on the bot. Later, that was taken care of. The function to check for orientation change was added

@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Introduction to the project
+week: 0
 ---
 
 Introduction to the project
